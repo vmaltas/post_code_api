@@ -1,4 +1,5 @@
 # post_code_api
-Post Code Api
+Post Code Api-0.0.1-SNAPSHOT
 
-Used JDK-8 
+Used JDK-8.
+To create& initialize database, use the "create_database.sql" file
