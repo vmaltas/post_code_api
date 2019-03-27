@@ -24,26 +24,23 @@ Default password    : 112233
 
 # Data Format
 
--getDistance Example
 GET /postcodeapi/getDistance?firstUkPostalCode=AB24 1WS&secondUkPostalCode=AB24 1XD
 Host: localhost:8080
 Authorization: Basic cG9zdENvZGVBZG1pbjoxMTIyMzM=
-Cache-Control: no-cache
+Cache-Control: no-cache 
 
 
--listPostCode
 GET /postCodeApi/listPostCode?page=1&start=0&limit=AA
 Host: localhost:8080
 Authorization: Basic cG9zdENvZGVBZG1pbjoxMTIyMzM=
 Cache-Control: no-cache
 
--updatePostCode
+
 POST /postCodeApi/updatePostCode HTTP/1.1
 Host: localhost:8080
 Authorization: Basic cG9zdENvZGVBZG1pbjoxMTIyMzM=
 Content-Type: application/json
 Cache-Control: no-cache
-
 {
 	"id":1,
     "postCode":"POSTCODE1",
