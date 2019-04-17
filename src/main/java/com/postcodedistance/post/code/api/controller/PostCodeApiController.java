@@ -47,12 +47,14 @@ public class PostCodeApiController {
             log.error(uuid + "First Postcode is not available." + firstUkPostalCode);
             distanceResponseDto.setStatus(-1);
             distanceResponseDto.setMessage("First Postcode is not available.");
+            return distanceResponseDto;
         }
 
         if (!secondPostCode.isPresent()) {
             log.error(uuid + "Second Postcode is not available." + secondUkPostalCode);
             distanceResponseDto.setStatus(-2);
             distanceResponseDto.setMessage("Second Postcode is not available.");
+            return distanceResponseDto;
         }
 
         double distance = calculateDistance(firstPostCode.get().getLatitude(), firstPostCode.get().getLongitude(), secondPostCode.get().getLatitude(), secondPostCode.get().getLongitude());
@@ -98,7 +100,9 @@ public class PostCodeApiController {
         if (postCodeList.getSize() == 0) {
             listPostCodeResponseDto.setStatus(-3);
             listPostCodeResponseDto.setMessage("No records found.");
+            return listPostCodeResponseDto;
         }
+
         for (PostCode postCode : postCodeList) {
             PostCodeDto postCodeDto = PostCodeDto.builder()
                     .id(postCode.getId())
@@ -123,6 +127,15 @@ public class PostCodeApiController {
         UpdatePostCodeResponseDto updatePostCodeResponseDto = new UpdatePostCodeResponseDto();
         UUID uuid = UUID.randomUUID();
         log.info("updatePostCode started.UUID" + uuid + " updatePostCodeRequestDto:" + updatePostCodeRequestDto.toString());
+
+        Optional<PostCode> postCodeAlreadyExists = postCodeService.findByPostCodeName(updatePostCodeRequestDto.getPostCode());
+        if(postCodeAlreadyExists.isPresent()){
+            log.error(uuid + "This Postcode is already available. You can not add more" + updatePostCodeRequestDto.toString());
+            updatePostCodeResponseDto.setStatus(-5);
+            updatePostCodeResponseDto.setMessage("This Postcode is already available. You can not add more");
+            return updatePostCodeResponseDto;
+        }
+
         Optional<PostCode> postCode = postCodeService.findById(updatePostCodeRequestDto.getId());
 
 
@@ -136,6 +149,7 @@ public class PostCodeApiController {
             log.error(uuid + "Postcode is not available." + updatePostCodeRequestDto.toString());
             updatePostCodeResponseDto.setStatus(-4);
             updatePostCodeResponseDto.setMessage("Postcode is not available.");
+            return updatePostCodeResponseDto;
         }
 
         log.info("getDistance ended successfully.UUID" + uuid + " updatePostCodeRequestDto:" + updatePostCodeRequestDto.toString());

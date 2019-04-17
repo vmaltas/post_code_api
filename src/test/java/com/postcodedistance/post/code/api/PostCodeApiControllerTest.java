@@ -36,22 +36,34 @@ public class PostCodeApiControllerTest {
     @InjectMocks
     private PostCodeApiController postCodeApiController;
 
-    /*@InjectMocks
-    private PostCodeApiController postCodeApiController;
-
-    @Before
-    public void setup() {
-        MockitoAnnotations.initMocks(this);
-        mockMvc = MockMvcBuilders
-                .standaloneSetup(postCodeApiController)
-                .build();
-    }*/
 
 
     @Test
-    public void testGetDistance() throws Exception {
+    public void testGetDistanceSuccessful() throws Exception {
 
         mockMvc.perform(get("/postCodeApi/getDistance?firstUkPostalCode=AB24 1WS&secondUkPostalCode=AB24 1XD")
+                .with(user("postCodeAdmin")))
+                .andExpect(status().isOk())
+                .andExpect(content().json("{\n" +
+                        "    \"firstUkPostalCode\": {\n" +
+                        "        \"postalCode\": \"AB24 1WS\",\n" +
+                        "        \"latitude\": 57.17333145,\n" +
+                        "        \"longitude\": -2.09524168\n" +
+                        "    },\n" +
+                        "    \"secondUkPostalCode\": {\n" +
+                        "        \"postalCode\": \"AB24 1XD\",\n" +
+                        "        \"latitude\": 57.1677984,\n" +
+                        "        \"longitude\": -2.09463214\n" +
+                        "    },\n" +
+                        "    \"distance\": 0.6163433926108876,\n" +
+                        "    \"distanceUnit\": \"km\"\n" +
+                        "}"));
+    }
+
+    @Test
+    public void testGetDistanceError() throws Exception {
+
+        mockMvc.perform(get("/postCodeApi/getDistance?firstUkPostalCode=AAAA 1WS&secondUkPostalCode=BBBB 1XD")
                 .with(user("postCodeAdmin")))
                 .andExpect(status().isOk())
                 .andExpect(content().json("{\n" +
